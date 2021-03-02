@@ -1,49 +1,35 @@
 os: linux
 dist: bionic
 
-language: minimal
+language: ruby
+rvm: 2.7.0
 
-jobs:
-  include:
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/vendor/bundle
 
-    - name: CD
-      language: ruby
-      rvm: 2.7.0
+before_install:
+  - gem install bundler:2.2.4   # match the Gemfile.lock, travis' bundle is 2.1.2
+  - bundle config path 'vendor/bundle'
 
-      addons:
-        apt:
-          packages:
-            # required to avoid SSL error (for htmlproofer)
-            - libcurl4-openssl-dev
+install:
+  # overriding to drop the travis `--development` flag
+  - bundle install --jobs=3 --retry=3
 
-      cache:
-        directories:
-          - $TRAVIS_BUILD_DIR/vendor/bundle
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev  # required to avoid SSL error (for htmlproofer)
 
-      before_install:
-        # match the Gemfile.lock, travis' bundler is 2.1.2
-        - gem install bundler:2.2.4
-        - bundle config path 'vendor/bundle'
-
-      install:
-        # overriding to drop the travis `--development` flag
-        - bundle install --jobs=3 --retry=3
-
-      script:
-        - eval "$BUILD_CMD"
-
-      git:
-        depth: false # for posts' lastmod
-
-    - name: Flush Starter
-      script:
-        - eval "$FLUSH_STARTER"
-
-before_script:
+script:
   - git -C "$HOME" clone "$BUILDER_REPO" --depth=1 -q
+  - eval "$BUILD_CMD"
 
 branches:
   only: /.*-stable$/
+
+git:
+  depth: false # for posts lastmod
 
 notifications:
   email:
