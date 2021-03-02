@@ -10,14 +10,14 @@
 #
 # 2. Create a git-tag on release branch
 #
-# 3. Build a RubyGems package base on the latest git-tag
+# 3. Build a rubygem package
 #
 #
-# Requires: Git, Gulp, RubyGems
+# Requires: gulp, rubygem
 
 set -eu
 
-manual_release=false
+auto_release=true
 
 ASSETS=(
   "_sass/jekyll-theme-chirpy.scss"
@@ -58,8 +58,9 @@ check() {
 }
 
 _bump_assets() {
+  _version="$1"
   for i in "${!ASSETS[@]}"; do
-    sed -i "s/v[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+/v$1/" "${ASSETS[$i]}"
+    sed -i "s/v[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+/v$_version/" "${ASSETS[$i]}"
   done
 
   gulp
@@ -117,33 +118,21 @@ release() {
 
   _release_branch="$_major-$_minor-stable"
 
-  if $manual_release; then
-    echo -e "Bump version to $_version (manual release)\n"
-    bump "$_version"
-    exit 0
-  fi
-
   if [[ -z $(git branch -v | grep "$_release_branch") ]]; then
     git checkout -b "$_release_branch"
   else
     git checkout "$_release_branch"
-    # cherry-pick the latest commit from master branch to release branch
-    git cherry-pick "$(git rev-parse master)"
+    # cherry-pick the latest 2 commit from master to release branch
+    git cherry-pick "$(git rev-parse master~1)" "$(git rev-parse master)"
   fi
-
-  echo -e "Bump version to $_version\n"
-  bump "$_version"
 
   echo -e "Create tag v$_version\n"
   git tag "v$_version"
 
-  echo -e "Build the gem pakcage for v$_version\n"
   build_gem
 
   # head back to master branch
   git checkout master
-  # cherry-pick the latest commit from release branch to master branch
-  git cherry-pick "$_release_branch" -x
 
 }
 
@@ -163,10 +152,16 @@ main() {
       exit -1
     fi
 
-    release "$_version"
+    echo -e "Bump version to $_version\n"
+    bump "$_version"
+
+    echo -e "Release to v$_version\n"
+
+    if $auto_release; then
+      release "$_version"
+    fi
 
   else
-
     echo "Error: Illegal version number: '$_version'"
   fi
 
@@ -176,7 +171,7 @@ while (($#)); do
   opt="$1"
   case $opt in
     -m | --manual)
-      manual_release=true
+      auto_release=false
       shift
       ;;
     *)
