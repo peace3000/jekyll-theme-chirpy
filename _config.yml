@@ -175,6 +175,7 @@ defaults:
           url: /
 
 sass:
+  sass_dir: /assets/css
   style: compressed
 
 compress_html:
