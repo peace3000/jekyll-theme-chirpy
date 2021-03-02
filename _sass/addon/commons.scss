@@ -941,7 +941,7 @@ $sidebar-display: "sidebar-display";
   }
 
   > div {
-    width: 100%;
+    max-width: 100%;
 
     &:not(:last-child) {
       margin-bottom: 1rem;
@@ -1390,7 +1390,7 @@ $sidebar-display: "sidebar-display";
   }
 
   #search-results > div {
-    width: 46%;
+    max-width: 46%;
     &:nth-child(odd) {
       margin-right: 1.5rem;
     }
