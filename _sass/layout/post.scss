@@ -85,12 +85,6 @@
     &.btn-outline-primary.disabled:focus {
       box-shadow: none;
     }
-    &::before {
-      color: var(--text-muted-color);
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      content: attr(prompt);
-    }
   }
 
   p {
@@ -101,6 +95,12 @@
   }
 
   a {
+    &::before {
+      color: var(--text-muted-color);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      content: attr(prompt);
+    }
     &:first-child {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
@@ -112,7 +112,6 @@
       right: 0.5px;
     }
   }
-
 } // .post-navigation
 
 @keyframes fade-up {
