@@ -8,6 +8,9 @@
  */
 
 $(function() {
-  const MARK = "img-hyperlink";
+
+  var MARK="img-hyperlink";
+
   $("a:has(img)").addClass(MARK);
+  
 });

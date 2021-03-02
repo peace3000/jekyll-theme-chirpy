@@ -1,5 +1,5 @@
 /*
- * Calculate the Timeago
+ * Caculate the Timeago
  * v2.0
  * https://github.com/cotes2020/jekyll-theme-chirpy
  * © 2019 Cotes Chung
@@ -8,11 +8,9 @@
 
 $(function() {
 
-  const timeagoElem = $(".timeago");
+  var toRefresh = $(".timeago").length;
 
-  let toRefresh = timeagoElem.length;
-
-  let intervalId = void 0;
+  var intervalId = void 0;
 
   function timeago(iso, isLastmod) {
     let now = new Date();
@@ -59,10 +57,10 @@ $(function() {
   function updateTimeago() {
     $(".timeago").each(function() {
       if ($(this).children("i").length > 0) {
-        $(this).text();
-        let isLastmod = $(this).hasClass("lastmod");
-        let node = $(this).children("i");
-        let date = node.text(); /* ISO Date: "YYYY-MM-DDTHH:MM:SSZ" */
+        var basic = $(this).text();
+        var isLastmod = $(this).hasClass("lastmod");
+        var node = $(this).children("i");
+        var date = node.text(); /* ISO Date: "YYYY-MM-DDTHH:MM:SSZ" */
         $(this).text(timeago(date, isLastmod));
         $(this).append(node);
       }

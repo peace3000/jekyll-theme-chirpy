@@ -8,10 +8,10 @@
 
 $(function() {
 
-  const sidebarUtil = (function () {
+  var sidebarUtil = (function() {
     const ATTR_DISPLAY = "sidebar-display";
-    let isExpanded = false;
-    const body = $("body");
+    var isExpanded = false;
+    var body = $("body");
 
     return {
       toggle() {

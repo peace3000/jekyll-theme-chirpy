@@ -11,13 +11,22 @@ layout: compress
 const include = [
 
   /*--- CSS ---*/
-  '{{ "/assets/css/style.css" | relative_url }}',
+
+  '{{ "/assets/css/home.css" | relative_url }}',
+  '{{ "/assets/css/categories.css" | relative_url }}',
+  '{{ "/assets/css/tags.css" | relative_url }}',
+  '{{ "/assets/css/archives.css" | relative_url }}',
+  '{{ "/assets/css/page.css" | relative_url }}',
+  '{{ "/assets/css/post.css" | relative_url }}',
+  '{{ "/assets/css/category-tag.css" | relative_url }}',
+  '{{ "/assets/css/lib/bootstrap-toc.min.css" | relative_url }}',
 
   /*--- Javascripts ---*/
-  '{{ "/assets/js/dist/home.min.js" | relative_url }}',
-  '{{ "/assets/js/dist/page.min.js" | relative_url }}',
-  '{{ "/assets/js/dist/post.min.js" | relative_url }}',
-  '{{ "/assets/js/dist/categories.min.js" | relative_url }}',
+
+  '{{ "/assets/js/home.min.js" | relative_url }}',
+  '{{ "/assets/js/page.min.js" | relative_url }}',
+  '{{ "/assets/js/post.min.js" | relative_url }}',
+  '{{ "/assets/js/categories.min.js" | relative_url }}',
 
   /*--- HTML ---*/
 
