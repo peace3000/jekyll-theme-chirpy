@@ -84,11 +84,13 @@ Then you can use it like other markdown language: surround the graph code with `
 
 ### Preview image
 
-If you want to add an image to the top of the post contents, specify the url for the image by:
+If you want to add an image to the top of the post contents, specify the url and alt attribute for the image:
 
 ```yaml
 ---
-image: /path/to/image-file
+image:
+  src: /path/to/image/file
+  alt: image alternative text
 ---
 ```
 
@@ -118,22 +120,44 @@ By default, the image is centered, but you can specify the position by using one
   Image will be left aligned in below sample:
 
   ```markdown
-  ![Desktop View](/assets/img/sample/mockup.png){: width="350" .normal}
+  ![Desktop View](/assets/img/sample/mockup.png){: .normal}
   ```
 
 - **Float to the left**
 
   ```markdown
-  ![Desktop View](/assets/img/sample/mockup.png){: width="240" .left}
+  ![Desktop View](/assets/img/sample/mockup.png){: .left}
   ```
 
 - **Float to the right**
 
   ```markdown
-  ![Desktop View](/assets/img/sample/mockup.png){: width="240" .right}
+  ![Desktop View](/assets/img/sample/mockup.png){: .right}
   ```
 
-> **Limitation**: Once you specify the position of an image, it is forbidden to add the image caption.
+**Limitation**: Once you specify the position of an image, it is forbidden to add the image caption.
+
+### CDN URL
+
+If you host the images on the CDN, you can save the time of repeatedly writing the CDN url by assigning the variable `img_cdn` of `_config.yml` file:
+
+```yaml
+img_cdn: https://cdn.com
+```
+
+Once `img_cdn` is assigned, the CDN url will be added to the path of all images (images of site avatar and posts) starting with `/`.
+
+For instance, when using images:
+
+```markdown
+![The flower](/path/to/flower.png)
+```
+
+The parsing result will automatically add the CDN prefix `https://cdn.com` before the image path:
+
+```html
+<img src="https://cdn.com/path/to/flower.png" alt="The flower">
+```
 
 ## Pinned Posts
 
