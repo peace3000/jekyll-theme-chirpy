@@ -7,12 +7,9 @@ const { src, dest, watch, series, parallel} = require('gulp');
 const concat = require('gulp-concat');
 const rename = require("gulp-rename");
 const uglify = require('gulp-uglify');
-const insert = require('gulp-insert');
-const fs = require('fs');
 
 const JS_ROOT = './assets/js';
 const jsDest = `${ JS_ROOT }/dist/`;
-const copyrightPath = `${ JS_ROOT }/.copyright`;
 
 function concatJs(files, output) {
   return src(files)
@@ -23,8 +20,7 @@ function concatJs(files, output) {
 
 function minifyJs() {
   return src(`${ jsDest }/*.js`)
-    .pipe(insert.prepend(fs.readFileSync(copyrightPath, 'utf8')))
-    .pipe(uglify({output: {comments: /^!|@preserve|@license|@cc_on/i}}))
+    .pipe(uglify())
     .pipe(dest(jsDest));
 }
 
@@ -67,7 +63,10 @@ const pageJs = () => {
 
 // GA pageviews report
 const pvreportJs = () => {
-  return concatJs(`${JS_ROOT}/_utils/pageviews.js`, 'pvreport');
+  return concatJs([
+      `${JS_ROOT}/_utils/pageviews.js`
+    ], 'pvreport'
+  );
 };
 
 const buildJs = parallel(homeJs, postJs, categoriesJs, pageJs, pvreportJs);
@@ -79,8 +78,7 @@ exports.liveRebuild = () => {
 
   watch([
       `${ JS_ROOT }/_commons/*.js`,
-      `${ JS_ROOT }/_utils/*.js`,
-      `${ JS_ROOT }/lib/*.js`
+      `${ JS_ROOT }/_utils/*.js`
     ],
     buildJs
   )
