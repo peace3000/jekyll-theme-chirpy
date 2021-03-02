@@ -173,9 +173,9 @@ function fetchProxyPageviews() {
 
 
 function fetchPageviews(fetchOrigin = true, filterOrigin = false) {
-  /* pvCacheEnabled, pvCacheData › see: /assets/js/_pv-config.js */
+  /* pvCacheEnabled › see: /assets/js/_pv-config.js */
   if (pvCacheEnabled && fetchOrigin) {
-    fetch(pvCacheData)
+    fetch("/assets/js/data/pageviews.json")
       .then((response) => response.json())
       .then((data) => {
         if (filterOrigin) {
