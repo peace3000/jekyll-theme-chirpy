@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 #
-# 1. Bump latest version number to files:
+# Bump latest version to
 #   - _sass/jekyll-theme-chirpy.scss
 #   - assets/js/.copyright.js
-#   - assets/js/dist/*.js (will be built by gulp later)
+#   - assets/js/dist/*.js
 #   - jekyll-theme-chirpy.gemspec
 #   - package.json
 #
-# 2. Create a git-tag
-#
-# 3. Build a rubygem package
-#
-# Requires: gulp, rubygem
+# Required: gulp
 
 set -eu
 
@@ -24,28 +20,7 @@ GEM_SPEC="jekyll-theme-chirpy.gemspec"
 
 NODE_META="package.json"
 
-_check_src() {
-  if [[ ! -f $1 && ! -d $1 ]]; then
-    echo -e "Error: missing file \"$1\"!\n"
-    exit -1
-  fi
-}
-
-check() {
-  if [[ -n $(git status . -s) ]]; then
-    echo "Warning: commit unstaged files first, and then run this tool againt."
-    exit -1
-  fi
-
-  for i in "${!ASSETS[@]}"; do
-    _check_src "${ASSETS[$i]}"
-  done
-
-  _check_src "$NODE_META"
-  _check_src "$GEM_SPEC"
-}
-
-_bump_assets() {
+bump_assets() {
   _version="$1"
   for i in "${!ASSETS[@]}"; do
     sed -i "s/v[[:digit:]]\.[[:digit:]]\.[[:digit:]]/v$_version/" "${ASSETS[$i]}"
@@ -54,20 +29,20 @@ _bump_assets() {
   gulp
 }
 
-_bump_gemspec() {
+bump_gemspec() {
   sed -i "s/[[:digit:]]\.[[:digit:]]\.[[:digit:]]/$1/" "$GEM_SPEC"
 }
 
-_bump_node() {
+bump_node() {
   sed -i \
     "s,[\"]version[\"]: [\"][[:digit:]]\.[[:digit:]]\.[[:digit:]][\"],\"version\": \"$1\"," \
     $NODE_META
 }
 
 bump() {
-  _bump_assets "$1"
-  _bump_gemspec "$1"
-  _bump_node "$1"
+  bump_assets "$1"
+  bump_gemspec "$1"
+  bump_node "$1"
 
   if [[ -n $(git status . -s) ]]; then
     git add .
@@ -75,12 +50,11 @@ bump() {
   fi
 }
 
-build_gem() {
-  gem build "$GEM_SPEC"
-}
-
 main() {
-  check
+  if [[ -n $(git status . -s) ]]; then
+    echo "Warning: commit unstaged files first, and then run this tool againt."
+    exit -1
+  fi
 
   _latest_tag="$(git describe --tags --abbrev=0)"
 
@@ -95,18 +69,15 @@ main() {
       exit -1
     fi
 
-    echo -e "Bump version to $_version\n"
+    echo "Bump version to $_version"
     bump "$_version"
 
-    echo -e "Create tag v$_version\n"
+    echo "Create tag v$_version"
     git tag "v$_version"
-
-    build_gem
 
   else
 
     echo "Error: Illegal version number: '$_version'"
-
   fi
 }
 
