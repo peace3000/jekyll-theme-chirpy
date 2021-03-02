@@ -115,6 +115,7 @@ What it does is:
 
   3. Automatically create a commit to save the changes.
 
+
 ## Usage
 
 ### Configuration
