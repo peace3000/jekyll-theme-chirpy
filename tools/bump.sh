@@ -17,8 +17,6 @@ ASSETS=(
 
 GEM_SPEC="jekyll-theme-chirpy.gemspec"
 
-NODE_META="package.json"
-
 bump_assets() {
   _version="$1"
   for i in ${!ASSETS[@]}; do
@@ -29,19 +27,13 @@ bump_assets() {
 }
 
 bump_gemspec() {
-  sed -i "s/[[:digit:]]\.[[:digit:]]\.[[:digit:]]/$1/" $GEM_SPEC
-}
-
-bump_node() {
-  sed -i \
-    "s,[\"]version[\"]: [\"][[:digit:]]\.[[:digit:]]\.[[:digit:]][\"],\"version\": \"$1\"," \
-    $NODE_META
+  _version="$1"
+  sed -i "s/[[:digit:]]\.[[:digit:]]\.[[:digit:]]/$_version/" $GEM_SPEC
 }
 
 bump() {
   bump_assets $1
   bump_gemspec $1
-  bump_node $1
 
   if [[ -n $(git status . -s) ]]; then
     git add .
